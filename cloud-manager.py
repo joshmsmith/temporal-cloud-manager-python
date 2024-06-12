@@ -6,9 +6,11 @@
 # These examples are provided as-is, without support. They are intended as reference material only.
 # 
 import subprocess
+import os
 import json
 
 def main():
+    initialize()
     namespaces = get_namespaces()
     namespacesCSVFile = open("namespace-list.csv", "w")
     namespacesCSVFile.write(f"Namespace,\n")
@@ -26,6 +28,9 @@ def main():
         for u in users:
             usersCSVFile.write(f"{n}, {u['spec']['email']},{u['spec']['accountRole']['role']},{u['state']},\n")
     usersCSVFile.close()
+    
+    os.remove("namespace-list.json")
+    os.remove("users-list.json")
 
 def get_namespaces():
     morepages = True
@@ -78,6 +83,9 @@ def get_users_for_namespace(namespace_name):
             users.append(i)
 
     return users
+def initialize():    
+    os.remove("namespace-list.csv")
+    os.remove("user-list.csv")
 
 if __name__ == "__main__":
     main()  
