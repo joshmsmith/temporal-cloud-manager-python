@@ -1,9 +1,9 @@
-# temporal-cloud-manager-python
+# Temporal Cloud Automation Tool
 This is a simple sample python script about how you could orchestrate tcld to gather info about your Temporal Cloud namespaces.
 For now all it does is list namespaces and users.
 Before running, install tcld and login with tcld.
 
-# running:
+# Setup & Run:
 1. Make sure you have [tcld](https://docs.temporal.io/cloud/tcld) installed and in your path
 2. Log in with tcld
 3. git clone this repo
