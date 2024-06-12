@@ -12,13 +12,15 @@ Before running, install tcld and login with tcld.
 python cloud-manager.py
 ```
 5. review the output:
+```bash
 $ cat namespace-list.csv
 Namespace,
 123-namespace.a2dd7,
 josh-test.a2dd7,
 demo-test1.a2dd7,
 <snip>
-
+```
+```bash
 $ cat user-list.csv 
 Namespace,Email, Account Role, State
 josh-test.a2dd7, user@email.com,Admin,Active,
@@ -26,6 +28,6 @@ josh-test.a2dd7, SDY@email.com,Admin,Active,
 josh-test.a2dd7, user2@email.com,Admin,Active,
 josh-test.a2dd7, user3@email.com,Admin,Active,
 <snip>
-
+```
 
 **These examples are provided as-is, without support. They are intended as reference material only.**
