@@ -1,0 +1,93 @@
+# This is a simple sample python script about how you could orchestrate tcld.
+# For now all it does is list namespaces and users.
+# It uses tcld to do the heavy lifting, calling APIs.
+# Before running, install tcld and login with tcld
+#
+# These examples are provided as-is, without support. They are intended as reference material only.
+# 
+import subprocess
+import json
+
+def main():
+    namespaces = get_namespaces()
+    namespacesCSVFile = open("namespace-list.csv", "w")
+    namespacesCSVFile.write(f"Namespace,\n")
+    for i in namespaces:
+        namespacesCSVFile.write(f"{i},\n")
+
+    namespacesCSVFile.close()
+    
+    usersCSVFile = open("user-list.csv", "w")
+    usersCSVFile.write(f"Namespace,Email, Account Role, State\n")
+    for n in namespaces:
+        users = []
+        users.extend(get_users_for_namespace(n))
+    
+        for u in users:
+            usersCSVFile.write(f"{n}, {u['spec']['email']},{u['spec']['accountRole']['role']},{u['state']},\n")
+    usersCSVFile.close()
+
+def get_namespaces():
+    morepages = True
+    namespaces = []
+    pagetoken = ""
+    pagenum = 0
+    while (morepages):
+        pagenum += 1
+        namespacesJSONFile = open("namespace-list.json", "w")
+        subprocess.run(f"tcld namespace list ", shell=True, stdout=namespacesJSONFile) 
+        namespacesJSONFile.close()
+
+        namespacesJSONFile = open("namespace-list.json", "r")
+        namespacesDict = json.load(namespacesJSONFile)
+        namespacesJSONFile.close()
+        pagetoken = namespacesDict['nextPageToken']
+        if pagetoken != "":
+            print(f"Retrieving namespace page {pagenum}")
+        else:
+            print(f"Retrieved all namespace pages ({pagenum})")
+            morepages = False
+
+        for i in namespacesDict['namespaces']:
+            namespaces.append(i)
+    return namespaces
+
+def get_users_for_namespace(namespace_name):
+    morepages = True
+    users = []
+    pagetoken = ""
+    pagenum = 0
+    while (morepages):
+        pagenum += 1
+        usersJSONFile = open("users-list.json", "w")
+        subprocess.run(f"tcld user list --namespace {namespace_name} --page-token \"{pagetoken}\"", shell=True, stdout=usersJSONFile) 
+        usersJSONFile.close()
+
+        usersJSONFile = open("users-list.json", "r")
+
+        usersDict = json.load(usersJSONFile)
+        usersJSONFile.close()
+        pagetoken = usersDict['nextPageToken']
+        if pagetoken != "":
+            print(f"Retrieving users page for {namespace_name}, page #{pagenum}")
+        else:
+            print(f"Retrieved all users pages for {namespace_name}, page #{pagenum}")
+            morepages = False
+
+        for i in usersDict['users']:
+            users.append(i)
+
+    return users
+
+if __name__ == "__main__":
+    main()  
+
+# check page token for namespaces
+# concatenate all pages together
+# output all namespaces to namespaces.CSV
+
+
+# for each namespace, get users/roles
+# check page token for users
+# concatenate all pages together
+# output all namespaces/users to namespaces-users.csv
