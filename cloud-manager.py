@@ -29,8 +29,7 @@ def main():
             usersCSVFile.write(f"{n}, {u['spec']['email']},{u['spec']['accountRole']['role']},{u['state']},\n")
     usersCSVFile.close()
     
-    os.remove("namespace-list.json")
-    os.remove("users-list.json")
+    cleanup()
 
 def get_namespaces():
     morepages = True
@@ -84,6 +83,9 @@ def get_users_for_namespace(namespace_name):
 
     return users
 def initialize():    
+    cleanup()
+
+def cleanup():    
     if(os.path.isfile("namespace-list.csv")):
         os.remove("namespace-list.csv")
     if(os.path.isfile("user-list.csv")):
