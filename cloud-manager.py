@@ -83,13 +83,18 @@ def get_users_for_namespace(namespace_name):
 
     return users
 def initialize():    
-    cleanup()
-
-def cleanup():    
     if(os.path.isfile("namespace-list.csv")):
         os.remove("namespace-list.csv")
     if(os.path.isfile("user-list.csv")):
         os.remove("user-list.csv")
+
+def cleanup():   
+    if(os.path.isfile("users-list.json")):
+        os.remove("users-list.json")
+    if(os.path.isfile("namespace-list.json")):
+            os.remove("namespace-list.json")
+    
+    
 
 if __name__ == "__main__":
     main()  
