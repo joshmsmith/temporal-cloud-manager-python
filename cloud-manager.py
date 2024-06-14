@@ -12,14 +12,14 @@ import json
 def main():
     initialize()
     namespaces = get_namespaces()
-    namespacesCSVFile = open("namespace-list.csv", "w")
+    namespacesCSVFile = open("namespace-list.csv", "w+")
     namespacesCSVFile.write(f"Namespace,\n")
     for i in namespaces:
         namespacesCSVFile.write(f"{i},\n")
 
     namespacesCSVFile.close()
     
-    usersCSVFile = open("user-list.csv", "w")
+    usersCSVFile = open("user-list.csv", "w+")
     usersCSVFile.write(f"Namespace,Email, Account Role, State\n")
     for n in namespaces:
         users = []
@@ -39,7 +39,7 @@ def get_namespaces():
     pagenum = 0
     while (morepages):
         pagenum += 1
-        namespacesJSONFile = open("namespace-list.json", "w")
+        namespacesJSONFile = open("namespace-list.json", "w+")
         subprocess.run(f"tcld namespace list ", shell=True, stdout=namespacesJSONFile) 
         namespacesJSONFile.close()
 
@@ -64,7 +64,7 @@ def get_users_for_namespace(namespace_name):
     pagenum = 0
     while (morepages):
         pagenum += 1
-        usersJSONFile = open("users-list.json", "w")
+        usersJSONFile = open("users-list.json", "w+")
         subprocess.run(f"tcld user list --namespace {namespace_name} --page-token \"{pagetoken}\"", shell=True, stdout=usersJSONFile) 
         usersJSONFile.close()
 
@@ -84,8 +84,10 @@ def get_users_for_namespace(namespace_name):
 
     return users
 def initialize():    
-    os.remove("namespace-list.csv")
-    os.remove("user-list.csv")
+    if(os.path.isfile("namespace-list.csv")):
+        os.remove("namespace-list.csv")
+    if(os.path.isfile("user-list.csv")):
+        os.remove("user-list.csv")
 
 if __name__ == "__main__":
     main()  
